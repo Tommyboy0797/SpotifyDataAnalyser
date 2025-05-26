@@ -2,23 +2,45 @@ import { redirect, useNavigate } from 'react-router-dom';
 import './following.css';
 import { useEffect, useState } from 'react';
 
-async function get_followed_artists(token: string, after?: string): Promise <any>{
-    const artist_list: any[] = [];
-    let next_after: string | undefined = after;
+// async function get_followed_artists(token: string, after?: string): Promise<any[]> {
+//     const artist_list: any[] = [];
+//     let next_after: string | undefined = after;
 
+//     while (true) {
+//         const params = new URLSearchParams({
+//             type: 'artist',
+//             limit: '50',
+//         });
 
-    while (true) {
-        const params = new URLSearchParams({type: 'artist', limit: '50'});
+//         if (next_after) {
+//             params.append('after', next_after);
+//         }
 
-        const response = await fetch(`https://api.spotify.com/v1/me/following?${params.toString()}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        });
-    }
+//         const response = await fetch(`https://api.spotify.com/v1/me/following?${params.toString()}`, {
+//             headers: {
+//                 Authorization: `Bearer ${token}`,
+//             },
+//         });
 
+//         if (!response.ok) {
+//             throw new Error(`Spotify API error: ${response.status} ${response.statusText}`);
+//         }
 
-}
+//         const data = await response.json();
+//         const artists = data.artists.items;
+
+//         artist_list.push(...artists);
+
+//         if (data.artists.cursors.after) {
+//             next_after = data.artists.cursors.after;
+//         } else {
+//             break;
+//         }
+//     }
+
+//     return artist_list;
+// }
+
 
 
 function Following(){

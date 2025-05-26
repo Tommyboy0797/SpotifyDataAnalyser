@@ -7,6 +7,8 @@ import os
 import httpx
 import base64
 from urllib.parse import urlencode
+import requests
+from typing import Optional
 
 load_dotenv()
 
@@ -15,6 +17,9 @@ CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
 REDIRECT_URI = os.getenv("SPOTIFY_REDIRECT_URI")
 
 app = FastAPI()
+class recieveData:
+    send_str:str
+
 
 # Allow CORS for React dev server (change for production)
 origins = [
@@ -95,6 +100,40 @@ async def get_me(request: Request):
         raise HTTPException(status_code=response.status_code, detail="Failed to fetch user data")
 
     return response.json()
+
+
+@app.get("dashboard/following/followed_artists")
+def get_followed_artists(token: str, after: Optional[str] = None):
+    next_after = after
+    artists_list = []
+
+    while True:
+        params = {
+            'type': 'artist',
+            'limit': 50,
+        }
+        if next_after:
+            params['after'] = next_after
+
+        headers = {
+            'Authorization': f'Bearer {token}',
+        }
+
+        response = requests.get("https://api.spotify.com/v1/me/following", params=params, headers=headers)
+
+        if response.status_code != 200: # if the repsonse isnt 200 code (good), raise an error
+            raise HTTPException(status_code=response.status_code, detail = response.text)
+
+        data = response.json() # take the response and make it json
+        artists = data["artists"]["items"]
+        artists_list.extend(artists)
+
+        next_after = data["artists"]["cursors"].get("after")
+
+        if not next_after:
+            break
+
+    return artists_list
 
 
 # Catch-all route for React (must come last)
