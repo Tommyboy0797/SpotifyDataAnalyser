@@ -1,8 +1,27 @@
+import {useNavigate } from 'react-router-dom';
 import './dashboard.css';
 import { useEffect, useState } from 'react';
 
+
+function DisplayProfile({ profile }: { profile: any }) {
+    const navigate = useNavigate();
+    const handle_redirect = (location: string) => {
+        navigate(location);
+    };
+  return (
+    <>
+      <h1 className='profile_data_title'>PROFILE DATA:</h1>
+      <p className='profile_data' id='account_username'>{profile.display_name}</p>
+      <p className='profile_data' id='account_email'>{profile.email}</p>
+      <p className='profile_data' id='account_country'>{profile.country}</p>
+      <p className='clickable_text' onClick={() => handle_redirect("/dashboard/following")} id='account_followers'>{profile.followers.total} followers</p>
+    </>
+  );
+}
+
 function Dashboard() {
   const [user, setUser] = useState<any>(null);
+
 
   useEffect(() => {
     fetch('http://127.0.0.1:8000/api/me', {
@@ -18,10 +37,8 @@ function Dashboard() {
 
   return (
     <>
-      <h1>LOGGED THE HECK IN</h1>
-      {user && (
-        <p>Welcome, {user.display_name} ({user.email})</p>
-      )}
+      <h1 className='title_text'>DASHBOARD</h1>
+      {user ? <DisplayProfile profile = {user} />: <p>Loading...</p>}
     </>
   );
 }
