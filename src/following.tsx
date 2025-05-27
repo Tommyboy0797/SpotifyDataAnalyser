@@ -2,52 +2,36 @@ import { redirect, useNavigate } from 'react-router-dom';
 import './following.css';
 import { useEffect, useState } from 'react';
 
-// async function get_followed_artists(token: string, after?: string): Promise<any[]> {
-//     const artist_list: any[] = [];
-//     let next_after: string | undefined = after;
-
-//     while (true) {
-//         const params = new URLSearchParams({
-//             type: 'artist',
-//             limit: '50',
-//         });
-
-//         if (next_after) {
-//             params.append('after', next_after);
-//         }
-
-//         const response = await fetch(`https://api.spotify.com/v1/me/following?${params.toString()}`, {
-//             headers: {
-//                 Authorization: `Bearer ${token}`,
-//             },
-//         });
-
-//         if (!response.ok) {
-//             throw new Error(`Spotify API error: ${response.status} ${response.statusText}`);
-//         }
-
-//         const data = await response.json();
-//         const artists = data.artists.items;
-
-//         artist_list.push(...artists);
-
-//         if (data.artists.cursors.after) {
-//             next_after = data.artists.cursors.after;
-//         } else {
-//             break;
-//         }
-//     }
-
-//     return artist_list;
-// }
+interface Artist {
+  id: string;
+  name: string;
+  href: string;
+  uri: string;
+  type: string;
+  popularity: number;
+  genres: string[];
+  followers: {
+    href: string | null;
+    total: number;
+  };
+  images: {
+    url: string;
+    height: number | null;
+    width: number | null;
+  }[];
+  external_urls: {
+    spotify: string;
+  };
+}
 
 
 
 function Following(){
     const [token, setToken] = useState<string | null>(null);
+    const [artists, set_artists] = useState<Artist[]>([]);
 
     useEffect(() => {
-    fetch('http://127.0.0.1:8000/api/me', {
+    fetch('http://127.0.0.1:8000/api/usr', {
       credentials: 'include',
     })
       .then(res => {
@@ -55,16 +39,38 @@ function Following(){
         return res.json();
       })
       .then(data => {
+        console.log("Access token from /api/usr:", data.access_token); // DEBUG
         setToken(data.access_token);
       })
       .catch(err => console.error(err));
-  }, []);
+    }, []);
 
-    return (
-        <>
-            <h1>ARTISTS YOU FOLLOW:</h1>
-        </>
-    );
+    useEffect(() => {
+      if (!token) return;
+
+      const params = new URLSearchParams({ token });
+      fetch(`http://127.0.0.1:8000/dashboard/following/followed_artists?${params.toString()}`, {
+        credentials: 'include', // include the cookies for the user 
+      })
+        .then(response => response.json())
+        .then(data => {
+          set_artists(data);
+          console.log("artists data: ", data);
+        })
+        .catch(err => console.error(err));
+
+
+
+    }, [token]);
+
+
+  return (
+      <>
+          <h1>ARTISTS YOU FOLLOW:</h1>
+      </>
+  );
+
+
 }
 
 export default Following;
