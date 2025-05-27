@@ -101,9 +101,20 @@ async def get_me(request: Request):
 
     return response.json()
 
+@app.get("/api/usr")
+async def get_me(request: Request):
+    access_token = request.cookies.get("access_token")
+    if not access_token:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    
+    return {"access_token": access_token}
 
-@app.get("dashboard/following/followed_artists")
-def get_followed_artists(token: str, after: Optional[str] = None):
+
+@app.get("/dashboard/following/followed_artists")
+def get_followed_artists(request: Request, after: Optional[str] = None):
+    access_token = request.cookies.get("access_token")
+    if not access_token:
+        raise HTTPException(status_code=401, detail="Not authenticated")
     next_after = after
     artists_list = []
 
@@ -116,9 +127,9 @@ def get_followed_artists(token: str, after: Optional[str] = None):
             params['after'] = next_after
 
         headers = {
-            'Authorization': f'Bearer {token}',
+            'Authorization': f'Bearer {access_token}',
         }
-
+        
         response = requests.get("https://api.spotify.com/v1/me/following", params=params, headers=headers)
 
         if response.status_code != 200: # if the repsonse isnt 200 code (good), raise an error
@@ -132,6 +143,8 @@ def get_followed_artists(token: str, after: Optional[str] = None):
 
         if not next_after:
             break
+
+        print(artists_list)
 
     return artists_list
 
