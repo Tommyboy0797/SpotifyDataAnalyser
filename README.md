@@ -10,5 +10,6 @@ Do not copy, modify, distribute, or use it in any form without express permissio
 To run:
 - npm run dev
 - python3 -m fastapi dev server.py
+- ACCESS THE SITE ON LOCALHOST __NOT__ 127.0.0.1
 
 [link](https://developer.spotify.com/documentation/web-api/tutorials/code-flow)
