@@ -65,10 +65,21 @@ function Following(){
 
 
   return (
-      <>
-          <h1>ARTISTS YOU FOLLOW:</h1>
-      </>
+    <>
+      <h1>ARTISTS YOU FOLLOW:</h1>
+      <div className="artist-list">
+        {artists.map((artist) => (
+          <div key={artist.id} className="artist">
+            <p className='artist_name'>{artist.name}</p>
+            <img src={artist.images[0]?.url} alt={artist.name} width="100" />
+            <p>Followers: {artist.followers.total.toLocaleString()}</p>
+            <a href={artist.external_urls.spotify} className='clickable_text_green' target="_blank" rel="noreferrer">View on Spotify</a>
+          </div>
+        ))}
+      </div>
+    </>
   );
+
 
 
 }
