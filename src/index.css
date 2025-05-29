@@ -67,3 +67,35 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+
+.clickable_text {
+    color: #888;
+    font-size: 1.2em;
+    line-height: 1.1;
+    text-align: left;
+}
+
+.clickable_text:hover {
+    color: #4d4d4d;
+    font-size: 1.2em;
+    line-height: 1.1;
+    text-align: left;
+    text-decoration: underline;
+}
+
+
+.clickable_text_green {
+    color: #1ED760;
+    font-size: 1.2em;
+    line-height: 1.1;
+    text-align: left;
+}
+
+.clickable_text_green:hover {
+    color: #4d4d4d;
+    font-size: 1.2em;
+    line-height: 1.1;
+    text-align: left;
+    text-decoration: underline;
+}
