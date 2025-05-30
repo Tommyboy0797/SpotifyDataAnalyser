@@ -39,7 +39,6 @@ function Following(){
         return res.json();
       })
       .then(data => {
-        console.log("Access token from /api/usr:", data.access_token); // DEBUG
         setToken(data.access_token);
       })
       .catch(err => console.error(err));
