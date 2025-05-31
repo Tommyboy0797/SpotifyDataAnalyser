@@ -1,27 +1,6 @@
 import {useNavigate } from 'react-router-dom';
 import './dashboard.css';
 import { useEffect, useState } from 'react';
-interface Artist {
-  id: string;
-  name: string;
-  href: string;
-  uri: string;
-  type: string;
-  popularity: number;
-  genres: string[];
-  followers: {
-    href: string | null;
-    total: number;
-  };
-  images: {
-    url: string;
-    height: number | null;
-    width: number | null;
-  }[];
-  external_urls: {
-    spotify: string;
-  };
-}
 
 function DisplayProfile({ profile }: { profile: any }) {
   const [artistsFollowedNum, setArtistsFollowedNum] = useState<number | null>(null);
