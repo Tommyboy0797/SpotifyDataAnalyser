@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, HTTPException
+from fastapi import FastAPI, Request, HTTPException, Query
 from fastapi.responses import JSONResponse, FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
@@ -147,6 +147,48 @@ def get_followed_artists(request: Request, after: Optional[str] = None):
         print(artists_list)
 
     return artists_list
+
+@app.get("/tracks_data")
+def tracks_data(request: Request, time_range: Optional[str] = Query("long_term", regex="^(long_term|medium_term|short_term)$")):
+    access_token = request.cookies.get("access_token")
+    if not access_token:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+
+    url = "https://api.spotify.com/v1/me/top/tracks"
+    params = {
+        "limit": 15,
+        "time_range": time_range
+    }
+
+    headers = {
+        "Authorization": f"Bearer {access_token}"
+    }
+
+    response = requests.get(url, params=params, headers=headers)
+
+    if response.status_code != 200:
+        raise HTTPException(status_code=response.status_code, detail=response.text)
+
+    data = response.json()
+    return data.get("items", [])
+
+@app.get("/artist_info")
+def artist_info(request: Request, id: str = Query(..., description="Spotify artist ID")):
+    access_token = request.cookies.get("access_token")
+    if not access_token:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+
+    url = f"https://api.spotify.com/v1/artists/{id}"
+    headers = {
+        "Authorization": f"Bearer {access_token}"
+    }
+
+    response = requests.get(url, headers=headers)
+
+    if response.status_code != 200:
+        raise HTTPException(status_code=response.status_code, detail=response.text)
+
+    return response.json()
 
 
 # Catch-all route for React (must come last)
