@@ -4,7 +4,7 @@ import './App.css';
 function App() {
   const CLIENT_ID = '499337586f42443baa43cb4e67c76517';
   const REDIRECT_URI = 'http://127.0.0.1:8000/callback';
-  const SCOPE = 'user-read-email user-read-private user-follow-read';
+  const SCOPE = 'user-read-email user-read-private user-follow-read user-top-read';
   const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize';
 
   const handleSpotifyLogin = () => {
