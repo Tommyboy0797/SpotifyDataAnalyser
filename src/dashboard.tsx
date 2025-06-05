@@ -31,12 +31,6 @@ let detailed: boolean = false; // return detailed info or not..
 const genreCounts: { [genre: string]: number } = {};
 
 
-function sleep(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-
-
 function DisplayProfile({ profile }: { profile: any }) {
   const [artistsFollowedNum, setArtistsFollowedNum] = useState<number | null>(null);
   const navigate = useNavigate();
